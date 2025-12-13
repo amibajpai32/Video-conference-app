@@ -1,0 +1,42 @@
+.video-meet-container {
+    padding: 20px;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.lobby-container {
+    display: flex;
+    flexDirection: column;
+    gap: 20px;
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 30px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.video-container {
+    width: 100%;
+    max-width: 400px;
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: #000;
+}
+
+.video-container video {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.connected-container {
+    padding: 20px;
+    /* text-align: center; */
+}
+
+.connected-container h2 {
+    color: white;
+    margin-bottom: 20px;
+}
+
