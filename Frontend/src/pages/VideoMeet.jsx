@@ -29,6 +29,7 @@ export default function VideoMeetComponent() {
     let socketIdRef = useRef();
 
     let localVideoref = useRef();
+    let isTogglingTracks = useRef(false);
 
     let [videoAvailable, setVideoAvailable] = useState(true);
 
@@ -122,13 +123,16 @@ export default function VideoMeetComponent() {
     };
 
     useEffect(() => {
+        // Skip getUserMedia if we're just toggling tracks (not recreating stream)
+        if (isTogglingTracks.current) {
+            isTogglingTracks.current = false;
+            return;
+        }
+        
         if (video !== undefined && audio !== undefined) {
             getUserMedia();
             console.log("SET STATE HAS ", video, audio);
-
         }
-
-
     }, [video, audio])
     let getMedia = () => {
         setVideo(videoAvailable);
@@ -383,12 +387,58 @@ export default function VideoMeetComponent() {
     }
 
     let handleVideo = () => {
-        setVideo(!video);
-        // getUserMedia();
+        // Try to get stream from window.localStream first, then from video element
+        const stream = window.localStream || (localVideoref.current && localVideoref.current.srcObject);
+        
+        if (stream) {
+            const videoTracks = stream.getVideoTracks();
+            if (videoTracks.length > 0) {
+                // Set flag to prevent useEffect from recreating stream
+                isTogglingTracks.current = true;
+                
+                // Toggle the enabled state of video tracks
+                const currentState = videoTracks[0].enabled;
+                const newState = !currentState;
+                videoTracks.forEach(track => {
+                    track.enabled = newState;
+                });
+                // Update state to reflect the new enabled state
+                setVideo(newState);
+                console.log('Video track toggled to:', newState);
+                return; // Exit early to prevent state update from triggering getUserMedia
+            }
+        }
+        
+        // If we get here, either no stream or no tracks, so allow normal state toggle
+        const currentState = video === true;
+        setVideo(!currentState);
     }
     let handleAudio = () => {
-        setAudio(!audio)
-        // getUserMedia();
+        // Try to get stream from window.localStream first, then from video element
+        const stream = window.localStream || (localVideoref.current && localVideoref.current.srcObject);
+        
+        if (stream) {
+            const audioTracks = stream.getAudioTracks();
+            if (audioTracks.length > 0) {
+                // Set flag to prevent useEffect from recreating stream
+                isTogglingTracks.current = true;
+                
+                // Toggle the enabled state of audio tracks
+                const currentState = audioTracks[0].enabled;
+                const newState = !currentState;
+                audioTracks.forEach(track => {
+                    track.enabled = newState;
+                });
+                // Update state to reflect the new enabled state
+                setAudio(newState);
+                console.log('Audio track toggled to:', newState);
+                return; // Exit early to prevent state update from triggering getUserMedia
+            }
+        }
+        
+        // If we get here, either no stream or no tracks, so allow normal state toggle
+        const currentState = audio === true;
+        setAudio(!currentState);
     }
 
     useEffect(() => {

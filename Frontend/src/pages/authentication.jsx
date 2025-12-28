@@ -6,7 +6,6 @@ import TextField from '@mui/material/TextField';
 import Link from '@mui/material/Link';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -42,8 +41,8 @@ export default function Authentication() {
   const { handleRegister, handleLogin } = React.useContext(AuthContext);
 
   const handleAuth = async () => {
+    SetError(""); // Clear previous errors
     try {
-
       if (formState === 1) {
         // REGISTER
         let result = await handleRegister(name, username, password);
@@ -51,10 +50,9 @@ export default function Authentication() {
         setUsername("");
         setMessage(result);
         setOpen(true);
-        SetError("")
-        setFormState(0)
-        setPassword("")
-
+        SetError("");
+        setFormState(0);
+        setPassword("");
       }
 
       if (formState === 0) {
@@ -65,25 +63,29 @@ export default function Authentication() {
       }
 
     } catch (err) {
-      return;
-      let message = (err.response.data.message);
-
-      SetError(message);
+      let errorMessage = err.response?.data?.message || err.message || "An error occurred";
+      SetError(errorMessage);
+      setMessage(errorMessage);
+      setOpen(true);
     }
   };
 
   return (
     <ThemeProvider theme={defaultTheme}>
-      <Grid container component="main" sx={{ height: '100vh' }}>
+      <Box
+        component="main"
+        sx={{
+          height: '100vh',
+          display: 'flex',
+        }}
+      >
         <CssBaseline />
 
         {/* LEFT IMAGE */}
-        <Grid
-          item
-          xs={false}
-          sm={4}
-          md={7}
+        <Box
           sx={{
+            display: { xs: 'none', sm: 'block' },
+            width: { sm: '33.333%', md: '58.333%' },
             backgroundImage: 'url(https://source.unsplash.com/random?wallpapers)',
             backgroundRepeat: 'no-repeat',
             backgroundColor: (t) =>
@@ -94,7 +96,16 @@ export default function Authentication() {
         />
 
         {/* RIGHT FORM CARD */}
-        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+        <Box
+          component={Paper}
+          elevation={6}
+          square
+          sx={{
+            width: { xs: '100%', sm: '66.667%', md: '41.667%' },
+            display: 'flex',
+            flexDirection: 'column',
+          }}
+        >
           <Box
             sx={{
               my: 8,
@@ -173,13 +184,14 @@ export default function Authentication() {
             </Box>
 
           </Box>
-        </Grid>
-      </Grid>
+        </Box>
+      </Box>
 
       <Snackbar
         open={open}
         autoHideDuration={4000}
         message={message}
+        onClose={() => setOpen(false)}
       />
     </ThemeProvider>
   );

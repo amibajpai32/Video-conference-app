@@ -26,7 +26,7 @@ function HomeComponent() {
 
                 <div style={{ display: "flex", alignItems: "center" }}>
 
-                    <h2>Apna Video Call</h2>
+                    <h2>VibeCall</h2>
                 </div>
 
                 <div style={{ display: "flex", alignItems: "center" }}>
@@ -56,16 +56,32 @@ function HomeComponent() {
                     <div>
                         <h2>Providing Quality Video Call Just Like Quality Education</h2>
 
-                        <div style={{ display: 'flex', gap: "10px" }}>
-
-                            <TextField onChange={e => setMeetingCode(e.target.value)} id="outlined-basic" label="Meeting Code" variant="outlined" />
-                            <Button onClick={handleJoinVideoCall} variant='contained'>Join</Button>
-
+                        <div style={{ display: 'flex', gap: "10px", alignItems: 'flex-start' }}>
+                            <TextField 
+                                onChange={e => setMeetingCode(e.target.value)} 
+                                id="outlined-basic" 
+                                label="Meeting Code" 
+                                variant="outlined"
+                                fullWidth
+                                sx={{ flex: 1 }}
+                            />
+                            <Button 
+                                onClick={handleJoinVideoCall} 
+                                variant='contained'
+                                sx={{ 
+                                    padding: '14px 32px',
+                                    fontSize: '1rem',
+                                    fontWeight: 600,
+                                    borderRadius: '8px'
+                                }}
+                            >
+                                Join
+                            </Button>
                         </div>
                     </div>
                 </div>
                 <div className='rightPanel'>
-                    <img srcSet='/logo3.png' alt="" />
+                    <img src='/logo3.png' alt="Video Call Illustration" />
                 </div>
             </div>
         </>

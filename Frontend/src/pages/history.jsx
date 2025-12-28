@@ -8,8 +8,9 @@ import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import HomeIcon from '@mui/icons-material/Home';
-
 import { IconButton } from '@mui/material';
+import '../App.css';
+
 export default function History() {
 
 
@@ -45,44 +46,88 @@ export default function History() {
     }
 
     return (
-        <div>
-
-            <IconButton onClick={() => {
-                routeTo("/home")
-            }}>
-                <HomeIcon />
-            </IconButton >
+        <div className="historyContainer">
+            <div className="historyHeader">
+                <h1>Meeting History</h1>
+                <IconButton 
+                    onClick={() => routeTo("/home")}
+                    sx={{
+                        backgroundColor: 'white',
+                        boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                        '&:hover': {
+                            backgroundColor: '#f5f5f5',
+                            transform: 'scale(1.1)'
+                        },
+                        transition: 'all 0.3s ease'
+                    }}
+                >
+                    <HomeIcon />
+                </IconButton>
+            </div>
             {
-                (meetings.length !== 0) ? meetings.map((e, i) => {
-                    return (
-
-                        <>
-
-
-                            <Card key={i} variant="outlined">
-
-
-                                <CardContent>
-                                    <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                meetings.length !== 0 ? (
+                    <div className="historyGrid">
+                        {meetings.map((e, i) => (
+                            <Card 
+                                key={i} 
+                                className="historyCard"
+                                sx={{
+                                    boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                                    borderRadius: '12px',
+                                    overflow: 'hidden',
+                                    background: 'white'
+                                }}
+                            >
+                                <CardContent sx={{ padding: '1.5rem' }}>
+                                    <Typography 
+                                        sx={{ 
+                                            fontSize: 16, 
+                                            fontWeight: 600,
+                                            color: '#667eea',
+                                            marginBottom: '0.5rem'
+                                        }} 
+                                        gutterBottom
+                                    >
                                         Code: {e.meetingCode}
                                     </Typography>
-
-                                    <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                                    <Typography 
+                                        sx={{ 
+                                            fontSize: 14, 
+                                            color: 'text.secondary'
+                                        }}
+                                    >
                                         Date: {formatDate(e.date)}
                                     </Typography>
-
                                 </CardContent>
-
-
+                                <CardActions sx={{ padding: '0 1.5rem 1.5rem' }}>
+                                    <Button 
+                                        size="small" 
+                                        variant="contained"
+                                        onClick={() => routeTo(`/${e.meetingCode}`)}
+                                        sx={{
+                                            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                                            '&:hover': {
+                                                background: 'linear-gradient(135deg, #5568d3 0%, #6a3f8f 100%)',
+                                            }
+                                        }}
+                                    >
+                                        Rejoin Meeting
+                                    </Button>
+                                </CardActions>
                             </Card>
-
-
-                        </>
-                    )
-                }) : <></>
-
+                        ))}
+                    </div>
+                ) : (
+                    <div className="emptyHistory">
+                        <Typography variant="h6" color="text.secondary">
+                            No meeting history yet
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary" sx={{ marginTop: '1rem' }}>
+                            Join a meeting to see it here
+                        </Typography>
+                    </div>
+                )
             }
-
         </div>
     )
 }
