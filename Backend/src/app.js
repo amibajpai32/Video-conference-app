@@ -21,6 +21,19 @@ app.use(express.urlencoded({ limit: "40kb", extended: true }));
 
 app.use("/api/v1/users", userRoutes);
 
+// Home route
+app.get("/", (req, res) => {
+    res.send("Server is running successfully!");
+});
+
+// Contact route
+app.post("/contact", (req, res) => {
+    // Handle contact form submission
+    const formDetails = req.body;
+    console.log("Contact form submitted:", formDetails);
+    res.json({ message: "Contact form received successfully", data: formDetails });
+});
+
 const start = async () => {
     app.set("mongo_user")
     const connectionDb = await mongoose.connect("mongodb+srv://imdigitalashish:imdigitalashish@cluster0.cujabk4.mongodb.net/")
